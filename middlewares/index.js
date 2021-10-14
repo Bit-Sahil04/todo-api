@@ -3,11 +3,13 @@ const router = express.Router();
 const path = require("path");
 const bodyParser = require("body-parser");
 
-// const signonRouter = require("../routes/signon");
+const authRouter = require("../routes/auth");
 const taskRouter = require("../routes/tasks");
 
 router.use(bodyParser.urlencoded({ extended: false }));
-// router.use(signonRouter);
+router.use(express.json());
+
+router.use(authRouter);
 router.use(taskRouter);
 
 router.get("/", (req, res) => {
