@@ -13,13 +13,3 @@
 - ``DELETE`` /todos/:id - delete an existing todo item
 - ``GET`` /todos/:id - get a single todo
 
-
-
-objectives:
-> design schema for todos
-> create routes and controllers for ``GET, POST, DELETE, PUT`` todos
-> connect to DB
-> create todo model
-> create user model
-> create implement registration
-> implement authentication using JWT
