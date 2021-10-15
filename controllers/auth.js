@@ -35,7 +35,7 @@ exports.postLogin = (req, res, next) => {
   User.findOne({ username: username })
     .then((user) => {
       if (!user) {
-        return res.status(404).send("404 registered username not found");
+        return res.status(404).send("404 Error: invalid credentials!");
       }
       return bcrypt.compare(password, user.password);
     })
@@ -44,7 +44,7 @@ exports.postLogin = (req, res, next) => {
         //TODO: handle sessions
         return res.status(200).send(`Welcome in: ${username}!`);
       } else {
-        return res.status(404).send("404 Sorry, invalid credentials!");
+        return res.status(404).send("404 Error: invalid credentials!");
       }
     })
     .catch((err) => {

@@ -1,5 +1,5 @@
 const Tasks = require("../models/tasks");
-// const User = require('../models/user');
+const User = require('../models/user');
 
 const errReporter = (err, res) => {
   console.log(err);
@@ -12,8 +12,8 @@ const taskPubView = (task) => {
     name: task.name,
     desc: task.desc,
     priority: task.priority,
-    createdOn: task.createdOn,
-    updatedOn: task.updatedOn,
+    createdAt: task.createdOn,
+    updatedAt: task.updatedOn,
     deadLine: task.deadLine,
   };
 };
@@ -70,6 +70,7 @@ exports.postAddTask = (req, res, next) => {
 
 exports.putUpdateTask = (req, res, next) => {
   const taskName = req.params.id;
+  console.log(req.query);
 
   Tasks.findOneAndUpdate({ name: taskName }, req.query)
     .then((task) => {

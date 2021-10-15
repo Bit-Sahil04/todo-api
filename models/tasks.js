@@ -20,10 +20,8 @@ const taskSchema = new Schema({
     required: true,
   },
   priority: { type: String, default: "normal" },
-  createdOn: { type: Date, default: Date.now() },
-  updatedOn: { type: Date, default: Date.now() },
   deadLine: { type: Date , default: null},
   _user: { type: Schema.Types.ObjectId, immutable: true },
-});
+}, {timestamps: true});
 
 module.exports = mongoose.model("tasks", taskSchema);
