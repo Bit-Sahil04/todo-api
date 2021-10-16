@@ -9,19 +9,22 @@ const Schema = mongoose.Schema;
 // Deadline < optional >
 // user_id
 
-const taskSchema = new Schema({
-  name: {
-    type: String,
-    unique: true,
-    required: true,
+const taskSchema = new Schema(
+  {
+    name: {
+      type: String,
+      unique: false,
+      required: true,
+    },
+    desc: {
+      type: String,
+      required: true,
+    },
+    priority: { type: String, default: "normal" },
+    deadLine: { type: Date, default: null },
+    _user: { type: Schema.Types.ObjectId, immutable: true },
   },
-  desc: {
-    type: String,
-    required: true,
-  },
-  priority: { type: String, default: "normal" },
-  deadLine: { type: Date , default: null},
-  _user: { type: Schema.Types.ObjectId, immutable: true },
-}, {timestamps: true});
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("tasks", taskSchema);

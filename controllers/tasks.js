@@ -1,12 +1,7 @@
 const Tasks = require("../models/tasks");
-const User = require('../models/user');
+const User = require("../models/user");
 
-const errReporter = (err, res) => {
-  console.log(err);
-
-  res.status(413).send(err.stringify());
-};
-
+// only expose desired properties to the user
 const taskPubView = (task) => {
   return {
     name: task.name,
@@ -19,9 +14,11 @@ const taskPubView = (task) => {
 };
 
 exports.getTasks = (req, res, next) => {
-  //serve tasks for specific user ( all users until registration is implemented )
-  Tasks.find()
-    .then((tasks) => {
+  req.user
+    .populate("tasks")
+    .then((user) => {
+      const tasks = user.tasks;
+      console.log(user, req.user);
       if (tasks.length) {
         const t = tasks.map((e) => {
           return taskPubView(e);
@@ -38,7 +35,8 @@ exports.getTasks = (req, res, next) => {
 };
 
 exports.postAddTask = (req, res, next) => {
-  const taskParams = req.query;
+  const taskParams = req.query || req.body;
+  let newTask;
 
   if (!taskParams.name || !taskParams.desc)
     return res
@@ -47,18 +45,24 @@ exports.postAddTask = (req, res, next) => {
         `Missing required argument <${!taskParams.name ? "name" : "desc"} > !!`
       );
 
-  Tasks.findOne({ name: taskParams.name })
-    .then((task) => {
-      if (task) {
+  req.user
+    .populate("tasks")
+    .then((user) => {
+      const task = user.tasks.find((t) => t.name === taskParams.name);
+      if (task > 0) {
         throw new Error(
           `Task ${taskParams.name} already exists, please choose a different name!`
         );
       }
-      const newTask = new Tasks(taskParams);
-      return newTask.save();
+      newTask = new Tasks({ ...taskParams, _user: user._id });
+      req.user.tasks.push(newTask._id);
+
+      return req.user.save();
     })
-    .then((newTask) => {
+    .then(() => req.user.save())
+    .then(() => {
       const t = taskPubView(newTask);
+      console.log( req.user);
 
       res.status(201).send(t);
     })
@@ -90,7 +94,7 @@ exports.putUpdateTask = (req, res, next) => {
 exports.getTask = (req, res, next) => {
   const taskName = req.params.id;
   Tasks.findOne({ name: taskName }).then((task) => {
-    res.status(200).send( taskPubView(task) );
+    res.status(200).send(taskPubView(task));
   });
 };
 
@@ -98,8 +102,7 @@ exports.deleteTask = (req, res, next) => {
   // delete req body params task id
   const taskName = req.params.id;
 
-  Tasks.deleteOne( { name: taskName })
-  .then( () => {
+  Tasks.deleteOne({ name: taskName }).then(() => {
     res.status(200).send(`Task Cleared ${taskName}`);
-  })
+  });
 };
