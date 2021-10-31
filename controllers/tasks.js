@@ -14,11 +14,13 @@ const taskPubView = (task) => {
 };
 
 exports.getTasks = (req, res, next) => {
-  req.user
-    .populate("tasks")
+  // req.user
+  User.findById(req.user._id)
+    .populate("tasks.taskId").exec()
     .then((user) => {
+      
       const tasks = user.tasks;
-      console.log(user, req.user);
+      console.log( tasks);
       if (tasks.length) {
         const t = tasks.map((e) => {
           return taskPubView(e);

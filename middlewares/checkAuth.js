@@ -23,3 +23,28 @@ exports.checkAuth = (req, res, next) => {
     }
   }
 };
+
+// just experimenting with async await version of above code (untested)
+
+exports.test = async (req, res, next) => {
+  const token = req.header("auth-token");
+
+  if (!token){
+    return res.status(403).send("Access Denied.");
+  }
+  else{
+    try{
+      const verification = jwt.verify(token, process.env.JWT_SECRET);
+      if (verification){
+        req.user = await User.findById(verification._id);
+        return next();  
+      }
+      else{
+        return res.status(400).send("Invalid Token");
+      }
+    }
+    catch{
+      res.status(500).send("Auth Error");
+    }
+  }
+}
