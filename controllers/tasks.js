@@ -20,7 +20,6 @@ exports.getTasks = (req, res, next) => {
     .exec()
     .then((user) => {
       const tasks = user.tasks;
-      console.log(user, );
       if (tasks.length) {
         const t = tasks.map((e) => {
           return taskPubView(e);
@@ -64,7 +63,6 @@ exports.postAddTask = (req, res, next) => {
     .then(() => req.user.save())
     .then(() => {
       const t = taskPubView(newTask);
-      console.log(req.user);
 
       res.status(201).send(t);
     })
