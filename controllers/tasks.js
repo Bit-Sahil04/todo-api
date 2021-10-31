@@ -16,11 +16,11 @@ const taskPubView = (task) => {
 exports.getTasks = (req, res, next) => {
   // req.user
   User.findById(req.user._id)
-    .populate("tasks")
+    .populate({ path: "tasks" })
+    .exec()
     .then((user) => {
-      
       const tasks = user.tasks;
-      console.log( user);
+      console.log(user, );
       if (tasks.length) {
         const t = tasks.map((e) => {
           return taskPubView(e);
@@ -59,12 +59,12 @@ exports.postAddTask = (req, res, next) => {
       newTask = new Tasks({ ...taskParams, _user: user._id });
       req.user.tasks.push(newTask._id);
 
-      return req.user.save();
+      return newTask.save();
     })
     .then(() => req.user.save())
     .then(() => {
       const t = taskPubView(newTask);
-      console.log( req.user);
+      console.log(req.user);
 
       res.status(201).send(t);
     })
