@@ -41,7 +41,6 @@ exports.postLogin = (req, res, next) => {
       }
       return bcrypt.compare(password, user.password).then((matched) => {
         if (matched) {
-          //TODO: handle sessions
           const token = jwt.sign(
             { _id: user._id, date: Date.now() },
             process.env.JWT_SECRET

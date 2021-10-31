@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 // task Schema:
 // id
-// description <optional>
+// description 
 // createdOn
 // updatedOn
 // Deadline < optional >

@@ -14,10 +14,9 @@ const taskPubView = (task) => {
 };
 
 exports.getTasks = (req, res, next) => {
-  // req.user
-  User.findById(req.user._id)
+  console.log(req.user);
+  req.user
     .populate({ path: "tasks" })
-    .exec()
     .then((user) => {
       const tasks = user.tasks;
       if (tasks.length) {
