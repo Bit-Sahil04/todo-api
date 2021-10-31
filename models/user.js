@@ -18,12 +18,12 @@ const userSchema = new Schema({
     required: true,
   },
   tasks: [
-    {
-      taskId: {
+
+       {
         type: Schema.Types.ObjectId,
         ref: "tasks",
       },
-    },
+
   ],
 });
 
